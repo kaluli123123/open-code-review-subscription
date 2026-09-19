@@ -96,6 +96,10 @@ func ResolveEndpointWithModelOverride(configPath, modelOverride string) (Resolve
 func ResolveEndpointWithOptions(configPath string, opts ResolveOptions) (ResolvedEndpoint, error) {
 	opts.Provider = strings.TrimSpace(opts.Provider)
 	opts.Model = strings.TrimSpace(opts.Model)
+	// An explicit CLI environment selection must never fall through to an API config.
+	if protocol := NormalizeProtocol(os.Getenv(envOCRLLMProtocol)); IsCLIProtocol(protocol) && opts.Provider == "" {
+		opts.Provider = protocol
+	}
 
 	// The global env overrides are parsed before any strategy runs, even though
 	// they are applied to the endpoint afterwards. Parsing them inside
@@ -140,7 +144,7 @@ func ResolveEndpointWithOptions(configPath string, opts ResolveOptions) (Resolve
 		}
 		// An ambient-auth endpoint is complete without a URL or token: the
 		// transport supplies both. Everything else still needs all three.
-		complete := ep.Model != "" && (ep.AmbientAuth || (ep.URL != "" && ep.Token != ""))
+		complete := ep.Model != "" && (ep.AmbientAuth || IsCLIProtocol(ep.Protocol) || (ep.URL != "" && ep.Token != ""))
 		if ok && complete {
 			return finalizeResolvedEndpoint(strategy.name, ep, env), nil
 		}
@@ -249,6 +253,10 @@ func errBedrockNotConfigurable(key string) error {
 
 // tryOCREnv reads OCR-specific environment variables.
 func tryOCREnv(modelOverride string) (ResolvedEndpoint, bool, error) {
+	if protocol := NormalizeProtocol(os.Getenv(envOCRLLMProtocol)); IsCLIProtocol(protocol) {
+		return resolveCLIProvider(configFile{Provider: protocol}, providerEntryConfig{}, protocol, modelOverride)
+	}
+
 	url := os.Getenv(envOCRLLMURL)
 	token := os.Getenv(envOCRLLMToken)
 	model := os.Getenv(envOCRLLMModel)
@@ -348,6 +356,9 @@ func tryOCRConfig(path string, opts ResolveOptions) (ResolvedEndpoint, bool, err
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
+			if preset, ok := LookupProvider(opts.Provider); ok && IsCLIProtocol(preset.Protocol) {
+				return tryProviderConfig(configFile{Provider: preset.Name}, opts.Model)
+			}
 			return ResolvedEndpoint{}, false, nil
 		}
 		return ResolvedEndpoint{}, false, err
@@ -382,12 +393,26 @@ func tryProviderConfig(cfg configFile, modelOverride string) (ResolvedEndpoint, 
 	} else {
 		entry, ok = cfg.CustomProviders[cfg.Provider]
 	}
-	if !ok {
+	if !ok && !(isPreset && IsCLIProtocol(preset.Protocol)) {
 		section := "providers"
 		if !isPreset {
 			section = "custom_providers"
 		}
 		return ResolvedEndpoint{}, false, fmt.Errorf("provider %q is set but not configured in %s section", cfg.Provider, section)
+	}
+
+	if isPreset && IsCLIProtocol(preset.Protocol) && entry.Protocol != "" && NormalizeProtocol(entry.Protocol) != preset.Protocol {
+		return ResolvedEndpoint{}, false, fmt.Errorf("provider %q cannot override its CLI protocol", cfg.Provider)
+	}
+	protocolForCLI := NormalizeProtocol(entry.Protocol)
+	if protocolForCLI == "" && isPreset {
+		protocolForCLI = preset.Protocol
+	}
+	if IsCLIProtocol(os.Getenv(envOCRLLMProtocol)) && !IsCLIProtocol(protocolForCLI) {
+		return ResolvedEndpoint{}, false, fmt.Errorf("OCR_LLM_PROTOCOL selects CLI but provider %q uses an API protocol", cfg.Provider)
+	}
+	if IsCLIProtocol(protocolForCLI) {
+		return resolveCLIProvider(cfg, entry, protocolForCLI, modelOverride)
 	}
 
 	// Pick the credential source here, but run api_key_cmd only just before
@@ -598,6 +623,10 @@ func tryProviderConfig(cfg configFile, modelOverride string) (ResolvedEndpoint, 
 
 // tryLegacyLlmConfig resolves an endpoint from the legacy llm config block.
 func tryLegacyLlmConfig(cfg configFile, modelOverride string) (ResolvedEndpoint, bool, error) {
+	if IsCLIProtocol(cfg.Llm.Protocol) {
+		return ResolvedEndpoint{}, false, fmt.Errorf("CLI protocols must be configured as a provider, not in the llm block")
+	}
+
 	model := cfg.Llm.Model
 	if modelOverride != "" {
 		model = modelOverride
@@ -981,4 +1010,41 @@ func ParseRetryCodes(raw string) ([]int, []string, error) {
 		return nil, nil, err
 	}
 	return filtered, warnings, nil
+}
+
+// resolveCLIProvider runs before any credential lookup or shell command.
+func resolveCLIProvider(cfg configFile, entry providerEntryConfig, protocol, modelOverride string) (ResolvedEndpoint, bool, error) {
+	for _, name := range []string{envOCRLLMURL, envOCRLLMToken, envOCRLLMAuthHeader, envOCRLLMExtraHeaders} {
+		if os.Getenv(name) != "" {
+			return ResolvedEndpoint{}, false, fmt.Errorf("%s is incompatible with CLI subscription transport", name)
+		}
+	}
+	if modelOverride == "" {
+		modelOverride = strings.TrimSpace(os.Getenv(envOCRLLMModel))
+	}
+
+	if entry.APIKey != "" || entry.APIKeyCmd != "" || entry.URL != "" || entry.AuthHeader != "" || len(entry.ExtraBody) != 0 || len(entry.ExtraHeaders) != 0 || len(entry.RetryCodes) != 0 || entry.AWSProfile != "" || entry.AWSRegion != "" {
+		return ResolvedEndpoint{}, false, fmt.Errorf("provider %q: CLI subscription transport does not accept API keys, key commands, URLs, HTTP headers, extra_body, retry_codes or AWS settings", cfg.Provider)
+	}
+	if override := NormalizeProtocol(os.Getenv(envOCRLLMProtocol)); override != "" && override != protocol {
+		return ResolvedEndpoint{}, false, fmt.Errorf("OCR_LLM_PROTOCOL conflicts with CLI provider %q", cfg.Provider)
+	}
+	timeout, err := ValidateTimeoutSec(entry.TimeoutSec)
+	if err != nil {
+		return ResolvedEndpoint{}, false, err
+	}
+	model := cfg.Model
+	if entry.Model != "" {
+		model = entry.Model
+	}
+	if modelOverride != "" {
+		model = modelOverride
+	}
+	if model == "" {
+		model = "sonnet"
+		if protocol == ProtocolCodexCLI {
+			model = "default"
+		}
+	}
+	return ResolvedEndpoint{Provider: cfg.Provider, Protocol: protocol, Model: model, Timeout: timeout, Source: "provider:" + cfg.Provider}, true, nil
 }

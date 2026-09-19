@@ -542,6 +542,9 @@ func setConfigValue(cfg *Config, key, value string) error {
 		// The llm block is a single url + token endpoint. Bedrock needs neither
 		// and has nowhere here to put a region or a profile, so it is refused at
 		// the point of setting rather than accepted and ignored at resolve time.
+		if llm.IsCLIProtocol(normalized) {
+			return fmt.Errorf("CLI protocols must be configured as a provider, not in the llm block")
+		}
 		if normalized == llm.ProtocolAnthropicBedrock {
 			return fmt.Errorf("llm.protocol cannot be %q: bedrock derives its host from aws_region and signs with the AWS credential chain, so it has no use for llm.url or llm.auth_token; run `ocr config set provider bedrock` instead", normalized)
 		}

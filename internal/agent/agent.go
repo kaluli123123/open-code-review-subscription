@@ -846,7 +846,7 @@ dispatchLoop:
 		if comments := a.args.CommentCollector.Comments(); len(comments) > 0 {
 			return comments, nil
 		}
-		return nil, fmt.Errorf("all %d file review(s) failed — check your LLM configuration and API key", dispatched)
+		return nil, fmt.Errorf("all %d file review(s) failed — check your LLM provider configuration and authentication", dispatched)
 	}
 
 	return a.args.CommentCollector.Comments(), nil

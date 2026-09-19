@@ -4,6 +4,7 @@
 package llm
 
 import (
+	"reflect"
 	"sort"
 	"strings"
 	"testing"
@@ -76,7 +77,7 @@ func TestListProviders_Order(t *testing.T) {
 	if len(providers) < 3 {
 		t.Fatalf("expected at least 3 providers, got %d", len(providers))
 	}
-	expected := []string{"anthropic", "baidu-qianfan", "bedrock", "dashscope", "dashscope-tokenplan", "deepseek", "edenai", "gemini", "hy-tokenplan", "iflytek", "kimi", "kimi-global", "litellm", "mimo", "minimax", "minimax-cn", "mistral", "novita", "ollama-cloud", "openai", "openai-responses", "siliconflow", "siliconflow-cn", "tencent-tokenhub", "volcengine", "xai", "z-ai", "z-ai-coding"}
+	expected := []string{"anthropic", "baidu-qianfan", "bedrock", "claude-cli", "codex-cli", "dashscope", "dashscope-tokenplan", "deepseek", "edenai", "gemini", "hy-tokenplan", "iflytek", "kimi", "kimi-global", "litellm", "mimo", "minimax", "minimax-cn", "mistral", "novita", "ollama-cloud", "openai", "openai-responses", "siliconflow", "siliconflow-cn", "tencent-tokenhub", "volcengine", "xai", "z-ai", "z-ai-coding"}
 	if len(providers) != len(expected) {
 		t.Fatalf("expected %d providers, got %d", len(expected), len(providers))
 	}
@@ -434,5 +435,25 @@ func TestProviders_AllProtocolsCanonical(t *testing.T) {
 		if err := ValidateProtocol(p.Protocol); err != nil {
 			t.Errorf("provider %q has non-canonical Protocol %q: %v", p.Name, p.Protocol, err)
 		}
+	}
+}
+
+func TestLookupProvider_ClaudeCLIDetails(t *testing.T) {
+	p, ok := LookupProvider("claude-cli")
+	if !ok || p.Protocol != ProtocolClaudeCLI || p.BaseURL != "" || p.EnvVar != "" || p.AuthHeader != "" {
+		t.Fatalf("unexpected Claude CLI preset: %+v", p)
+	}
+	if !reflect.DeepEqual(p.Models, []string{"sonnet", "opus", "haiku"}) {
+		t.Fatalf("unexpected Claude CLI models: %v", p.Models)
+	}
+}
+
+func TestLookupProvider_CodexCLIDetails(t *testing.T) {
+	p, ok := LookupProvider("codex-cli")
+	if !ok || p.Protocol != ProtocolCodexCLI || p.BaseURL != "" || p.EnvVar != "" || p.AuthHeader != "" {
+		t.Fatalf("unexpected Codex CLI preset: %+v", p)
+	}
+	if !reflect.DeepEqual(p.Models, []string{"default"}) {
+		t.Fatalf("unexpected Codex CLI default-model sentinel: %v", p.Models)
 	}
 }

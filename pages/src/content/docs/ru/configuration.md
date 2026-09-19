@@ -45,10 +45,21 @@ ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 API-ключ. Если `providers.<name>.api_key` не задан, OCR использует
 соответствующую переменную окружения.
 
+**CLI-провайдеры подписок только в этом форке:** для `claude-cli` и `codex-cli`
+соберите исходники этого форка через `make build` и используйте `dist/opencodereview`.
+Установка upstream-пакета npm их не добавляет. Они используют вход по подписке
+через установленный официальный CLI и отклоняют API-ключи, команды получения ключа,
+пользовательские URL, HTTP-заголовки и переопределения HTTP-настроек. Псевдонимы
+Claude: `sonnet`, `opus`, `haiku`. Значение `default` у Codex означает выбор
+модели по умолчанию самим CLI, а не ID модели для отправки сервису. Квоты подписки
+сохраняются; перехода на API нет. Windows не поддерживается.
+
 | Имя | Протокол | Базовый URL | Переменная окружения для API-ключа |
 |---|---|---|---|
 | `anthropic` | anthropic | `https://api.anthropic.com` | `ANTHROPIC_API_KEY` |
 | `bedrock` | anthropic-bedrock | определяется `aws_region` | — (цепочка учётных данных AWS) |
+| `claude-cli` | claude-cli | — (локальный официальный CLI) | — (вход по подписке) |
+| `codex-cli` | codex-cli | — (локальный официальный CLI) | — (вход по подписке) |
 | `openai` | openai | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
 | `openai-responses` | openai-responses | `https://api.openai.com/v1` | `OPENAI_RESPONSES_API_KEY` |
 | `gemini` | openai | `https://generativelanguage.googleapis.com/v1beta/openai` | `GEMINI_API_KEY` |

@@ -603,7 +603,7 @@ func (a *Agent) dispatchSubtasks(ctx context.Context) ([]model.LlmComment, error
 
 	failed := atomic.LoadInt64(&a.subtaskFailed)
 	if failed > 0 && failed == dispatched {
-		return nil, fmt.Errorf("all %d file scan(s) failed — check your LLM configuration and API key", dispatched)
+		return nil, fmt.Errorf("all %d file scan(s) failed — check your LLM provider configuration and authentication", dispatched)
 	}
 	return a.args.CommentCollector.Comments(), nil
 }

@@ -40,10 +40,20 @@ ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 されています——選択後は API key を入力するだけです。`providers.<name>.api_key`
 が未設定の場合は、対応する環境変数に自動的にフォールバックします。
 
+**このフォーク限定のサブスクリプション CLI provider：** `claude-cli` と `codex-cli`
+は、このフォークのソースで `make build` を実行し、`dist/opencodereview` を使う必要が
+あります。上流 npm パッケージには含まれません。インストール済み公式 CLI の契約ログインを
+使用し、API key、キー取得コマンド、独自 URL、HTTP ヘッダー、HTTP 設定の上書きを拒否します。
+Claude の別名は `sonnet`、`opus`、`haiku` です。Codex の `default` は CLI に既定モデルを
+選ばせる番兵値であり、サービスに送るモデル ID ではありません。契約の利用上限は適用され、
+API へのフォールバックはありません。Windows は未対応です。
+
 | 名称 | プロトコル | Base URL | API key 環境変数 |
 |---|---|---|---|
 | `anthropic` | anthropic | `https://api.anthropic.com` | `ANTHROPIC_API_KEY` |
 | `bedrock` | anthropic-bedrock | `aws_region` から決定 | —（AWS 認証情報チェーン） |
+| `claude-cli` | claude-cli | —（ローカル公式 CLI） | —（契約ログイン） |
+| `codex-cli` | codex-cli | —（ローカル公式 CLI） | —（契約ログイン） |
 | `openai` | openai | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
 | `openai-responses` | openai-responses | `https://api.openai.com/v1` | `OPENAI_RESPONSES_API_KEY` |
 | `gemini` | openai | `https://generativelanguage.googleapis.com/v1beta/openai` | `GEMINI_API_KEY` |

@@ -245,7 +245,7 @@ func checkAPIKeyRequirement(providerName, apiKey, apiKeyCmd string, preset llm.P
 		return nil
 	}
 	switch {
-	case isPreset && preset.AmbientAuth:
+	case isPreset && (preset.AmbientAuth || llm.IsCLIProtocol(preset.Protocol)):
 		return nil
 	case isPreset && preset.EnvVar != "":
 		if os.Getenv(preset.EnvVar) == "" {

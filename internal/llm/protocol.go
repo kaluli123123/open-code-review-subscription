@@ -35,6 +35,8 @@ const (
 	// official SDK's bedrock middleware performs that rewriting, so this
 	// shares the Anthropic client rather than reimplementing the protocol.
 	ProtocolAnthropicBedrock = "anthropic-bedrock"
+	ProtocolClaudeCLI        = "claude-cli"
+	ProtocolCodexCLI         = "codex-cli"
 )
 
 // NormalizeProtocol canonicalizes protocol names. It is case-insensitive and
@@ -60,13 +62,19 @@ func NormalizeProtocol(raw string) string {
 	}
 }
 
-// ValidateProtocol accepts the four canonical protocol names and rejects
+// ValidateProtocol accepts the canonical protocol names and rejects
 // everything else.
 func ValidateProtocol(p string) error {
 	switch p {
-	case ProtocolAnthropic, ProtocolOpenAIChatCompletions, ProtocolOpenAIResponses, ProtocolAnthropicBedrock:
+	case ProtocolAnthropic, ProtocolOpenAIChatCompletions, ProtocolOpenAIResponses, ProtocolAnthropicBedrock, ProtocolClaudeCLI, ProtocolCodexCLI:
 		return nil
 	default:
-		return fmt.Errorf("unsupported protocol %q; supported protocols are %q, %q, %q, %q", p, ProtocolAnthropic, ProtocolOpenAIChatCompletions, ProtocolOpenAIResponses, ProtocolAnthropicBedrock)
+		return fmt.Errorf("unsupported protocol %q; supported protocols are %q, %q, %q, %q, %q, %q", p, ProtocolAnthropic, ProtocolOpenAIChatCompletions, ProtocolOpenAIResponses, ProtocolAnthropicBedrock, ProtocolClaudeCLI, ProtocolCodexCLI)
 	}
+}
+
+// IsCLIProtocol identifies subscription-backed local CLI transports.
+func IsCLIProtocol(protocol string) bool {
+	p := NormalizeProtocol(protocol)
+	return p == ProtocolClaudeCLI || p == ProtocolCodexCLI
 }

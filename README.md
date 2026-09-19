@@ -1,3 +1,13 @@
+# Independent fork: subscription CLI backends
+
+This experimental fork of [alibaba/open-code-review](https://github.com/alibaba/open-code-review) adds `claude-cli` and `codex-cli` backends. OCR keeps its native review and tool loop; this is **not delegation mode**. This fork is not an official Alibaba, Anthropic, or OpenAI release and is not endorsed by them. Upstream copyright notices and the [Apache-2.0 license](LICENSE) are retained.
+
+**Build this fork from source with `make build` and use `dist/opencodereview`.** The upstream npm package and installation commands below do not install these fork-specific backends. See [setup, verified scope, and limitations](docs/cli-subscriptions.md). Subscription quotas and any account-level extra-usage charges still apply; this is not free or unlimited inference.
+
+The content below describes the upstream project. Its badges, releases, and hosted services refer to upstream, not this fork.
+
+---
+
 <div align="center">
   <a href="https://open-codereview.ai">
     <img src="imgs/logo-core.svg" alt="OpenCodeReview logo" width="180" />

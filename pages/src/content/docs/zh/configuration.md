@@ -39,10 +39,19 @@ ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 下列 provider 随 OCR 发布，已预置 Base URL 与协议，选中后只需填 API key。
 若 `providers.<name>.api_key` 未设置，会自动回退到对应的环境变量。
 
+**仅此 fork 提供的订阅 CLI provider：** `claude-cli` 和 `codex-cli` 必须从本 fork
+源码执行 `make build`，使用 `dist/opencodereview`；安装上游 npm 包不会获得这些后端。
+它们使用已安装官方 CLI 的订阅登录，拒绝 API key、取 key 命令、自定义 URL、HTTP
+请求头及 HTTP 配置覆盖。Claude 别名为 `sonnet`、`opus`、`haiku`。Codex 的 `default`
+是让 CLI 选择默认模型的哨兵值，不是发送给服务的模型 ID。订阅配额仍适用，不会回退
+到 API 调用。不支持 Windows。
+
 | 名称 | 协议 | Base URL | API key 环境变量 |
 |---|---|---|---|
 | `anthropic` | anthropic | `https://api.anthropic.com` | `ANTHROPIC_API_KEY` |
 | `bedrock` | anthropic-bedrock | 由 `aws_region` 决定 | —（AWS 凭证链） |
+| `claude-cli` | claude-cli | —（本地官方 CLI） | —（订阅登录） |
+| `codex-cli` | codex-cli | —（本地官方 CLI） | —（订阅登录） |
 | `openai` | openai | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
 | `openai-responses` | openai-responses | `https://api.openai.com/v1` | `OPENAI_RESPONSES_API_KEY` |
 | `gemini` | openai | `https://generativelanguage.googleapis.com/v1beta/openai` | `GEMINI_API_KEY` |

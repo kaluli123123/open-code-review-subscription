@@ -1,3 +1,13 @@
+# 独立派生版本：订阅 CLI 后端
+
+这是 [alibaba/open-code-review](https://github.com/alibaba/open-code-review) 的实验性派生版本，新增 `claude-cli` 和 `codex-cli` 后端。OCR 保留原生审查和工具循环，**不是 delegation 模式**。本版本不是 Alibaba、Anthropic 或 OpenAI 的官方发行版，也不代表获得其背书。保留上游版权声明和 [Apache-2.0 许可证](../../LICENSE)。
+
+**请从本仓库源码执行 `make build`，使用 `dist/opencodereview`。** 下方上游 npm 包和安装命令不会安装本派生版本新增的后端。请先阅读[配置、验证范围与限制](../cli-subscriptions.md)。订阅配额以及账户可能启用的额外用量收费仍然适用；这不是免费或无限推理。
+
+下方内容介绍上游项目；徽章、发行版及托管服务均指向上游，而非本派生版本。
+
+---
+
 <div align="center">
   <a href="https://open-codereview.ai">
     <img src="../../imgs/logo-core.svg" alt="OpenCodeReview logo" width="180" />

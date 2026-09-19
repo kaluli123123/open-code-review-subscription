@@ -42,10 +42,21 @@ preset — once selected, you only need to fill in the API key. If
 `providers.<name>.api_key` is unset, OCR falls back to the corresponding
 environment variable.
 
+**Fork-only subscription CLI providers:** `claude-cli` and `codex-cli` require
+building this fork from source with `make build` and using `dist/opencodereview`;
+they are not included by installing the upstream npm package. They use the
+installed official CLI's subscription login and reject API keys, key commands,
+custom URLs, HTTP headers, and HTTP configuration overrides. Claude aliases are
+`sonnet`, `opus`, and `haiku`. Codex's `default` is a sentinel that lets the CLI
+select its default model, not a model ID sent to the service. Subscription
+quotas still apply; no API fallback is used. Windows is not supported.
+
 | Name | Protocol | Base URL | API key env var |
 |---|---|---|---|
 | `anthropic` | anthropic | `https://api.anthropic.com` | `ANTHROPIC_API_KEY` |
 | `bedrock` | anthropic-bedrock | derived from `aws_region` | — (AWS credential chain) |
+| `claude-cli` | claude-cli | — (official local CLI) | — (subscription login) |
+| `codex-cli` | codex-cli | — (official local CLI) | — (subscription login) |
 | `openai` | openai | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
 | `openai-responses` | openai-responses | `https://api.openai.com/v1` | `OPENAI_RESPONSES_API_KEY` |
 | `gemini` | openai | `https://generativelanguage.googleapis.com/v1beta/openai` | `GEMINI_API_KEY` |

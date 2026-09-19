@@ -36,6 +36,8 @@ type Provider struct {
 }
 
 var registry = []Provider{
+	{Name: "claude-cli", DisplayName: "Claude Code (subscription CLI)", Protocol: ProtocolClaudeCLI, Models: []string{"sonnet", "opus", "haiku"}},
+	{Name: "codex-cli", DisplayName: "Codex (subscription CLI)", Protocol: ProtocolCodexCLI, Models: []string{"default"}},
 	{
 		Name:        "anthropic",
 		DisplayName: "Anthropic Claude API",

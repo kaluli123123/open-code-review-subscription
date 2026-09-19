@@ -1,3 +1,13 @@
+# 独立フォーク：サブスクリプション CLI バックエンド
+
+これは [alibaba/open-code-review](https://github.com/alibaba/open-code-review) の実験的なフォークで、`claude-cli` と `codex-cli` を追加します。OCR のネイティブなレビューとツールループを維持し、**delegation モードではありません**。Alibaba、Anthropic、OpenAI の公式リリースではなく、各社の承認を示すものでもありません。上流の著作権表示と [Apache-2.0 ライセンス](../../LICENSE) を維持しています。
+
+**このフォークのソースで `make build` を実行し、`dist/opencodereview` を使用してください。** 以下の上流 npm パッケージやインストール手順には、このフォーク独自のバックエンドは含まれません。[設定、検証範囲、制限](../cli-subscriptions.md)を確認してください。契約の利用上限や、アカウントで有効にした追加利用料金は適用されます。無料・無制限の推論ではありません。
+
+以下は上流プロジェクトの説明です。バッジ、リリース、ホスト型サービスは、このフォークではなく上流を指します。
+
+---
+
 <div align="center">
   <a href="https://open-codereview.ai">
     <img src="../../imgs/logo-core.svg" alt="OpenCodeReview logo" width="180" />
