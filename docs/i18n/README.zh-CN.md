@@ -4,6 +4,16 @@
 
 **请从本仓库源码执行 `make build`，使用 `dist/opencodereview`。** 下方上游 npm 包和安装命令不会安装本派生版本新增的后端。请先阅读[配置、验证范围与限制](../cli-subscriptions.md)。订阅配额以及账户可能启用的额外用量收费仍然适用；这不是免费或无限推理。
 
+快速切换模型：
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # 使用 Codex CLI 选择的模型，例如 gpt-5.6-luna
+ocr config set provider claude-cli
+ocr config set model opus          # 也可以使用 sonnet / haiku
+ocr review --provider claude-cli --model sonnet  # 仅本次命令生效
+```
+
 下方内容介绍上游项目；徽章、发行版及托管服务均指向上游，而非本派生版本。
 
 ---

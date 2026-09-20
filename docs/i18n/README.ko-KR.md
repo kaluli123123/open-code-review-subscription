@@ -4,6 +4,16 @@
 
 **이 포크의 소스에서 `make build`를 실행하고 `dist/opencodereview`를 사용하세요.** 아래 업스트림 npm 패키지와 설치 명령에는 이 포크 전용 백엔드가 포함되지 않습니다. [설정, 검증 범위 및 제한](../cli-subscriptions.md)을 먼저 확인하세요. 구독 사용량 제한과 계정에서 활성화한 추가 사용 요금은 그대로 적용됩니다. 무료 또는 무제한 추론이 아닙니다.
 
+모델을 빠르게 전환하려면:
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # Codex CLI가 선택한 모델(예: gpt-5.6-luna) 사용
+ocr config set provider claude-cli
+ocr config set model opus          # sonnet / haiku도 사용 가능
+ocr review --provider claude-cli --model sonnet  # 이 명령에만 적용
+```
+
 아래 내용은 업스트림 프로젝트 설명입니다. 배지, 릴리스 및 호스팅 서비스는 이 포크가 아닌 업스트림을 가리킵니다.
 
 ---

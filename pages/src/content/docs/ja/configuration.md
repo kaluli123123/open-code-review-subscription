@@ -34,6 +34,22 @@ ocr config set model                       claude-opus-4-6
 ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 ```
 
+サブスクリプション CLI バックエンドの既定 provider と model を切り替えるには：
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # Codex CLI が選択したモデル（例：gpt-5.6-luna）を使用
+ocr config set provider claude-cli
+ocr config set model opus          # sonnet / haiku も使用可能
+```
+
+1 回のコマンドだけ上書きする場合は `--provider` と `--model` を追加します：
+
+```bash
+ocr review --provider claude-cli --model sonnet
+ocr review --provider codex-cli --model default
+```
+
 ### 組み込み provider
 
 以下の provider が OCR に同梱されており、Base URL とプロトコルがプリセット

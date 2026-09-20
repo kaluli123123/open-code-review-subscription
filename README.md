@@ -4,6 +4,16 @@ This experimental fork of [alibaba/open-code-review](https://github.com/alibaba/
 
 **Build this fork from source with `make build` and use `dist/opencodereview`.** The upstream npm package and installation commands below do not install these fork-specific backends. See [setup, verified scope, and limitations](docs/cli-subscriptions.md). Subscription quotas and any account-level extra-usage charges still apply; this is not free or unlimited inference.
 
+Quick model switching:
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # use the model selected by Codex CLI, e.g. gpt-5.6-luna
+ocr config set provider claude-cli
+ocr config set model opus          # or sonnet / haiku
+ocr review --provider claude-cli --model sonnet  # one command only
+```
+
 The content below describes the upstream project. Its badges, releases, and hosted services refer to upstream, not this fork.
 
 ---

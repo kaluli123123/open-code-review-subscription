@@ -57,6 +57,33 @@ backend explicitly (the CLI selects its default model unless overridden):
 /path/to/open-code-review/dist/opencodereview review --provider codex-cli
 ```
 
+### Switch providers and models quickly
+
+Change the persistent default with `ocr config set`:
+
+```sh
+# Claude subscription
+ocr config set provider claude-cli
+ocr config set model opus       # or sonnet / haiku
+
+# Codex subscription
+ocr config set provider codex-cli
+ocr config set model default    # use the model selected by the official Codex CLI
+```
+
+To use a different model for one command without changing the default:
+
+```sh
+ocr review --provider claude-cli --model sonnet
+ocr scan --provider claude-cli --model opus
+ocr review --provider codex-cli --model default
+```
+
+For example, if the official Codex CLI is configured with `gpt-5.6-luna`,
+using `--model default` makes the subscription backend use that CLI-selected
+model. The exact model availability is controlled by the official CLI and the
+signed-in account.
+
 These commands use the native OCR review pipeline, not `ocr delegate`.
 Run them in the repository you want to review. Do not supply an API key, API URL,
 key command, custom HTTP headers, or a third-party model route for this backend.

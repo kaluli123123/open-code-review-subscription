@@ -38,6 +38,22 @@ ocr config set model                       claude-opus-4-6
 ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 ```
 
+Чтобы переключить провайдер и модель по умолчанию для CLI-подписок:
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # модель, выбранная Codex CLI, например gpt-5.6-luna
+ocr config set provider claude-cli
+ocr config set model opus          # также доступны sonnet / haiku
+```
+
+Чтобы изменить настройки только для одной команды, добавьте `--provider` и `--model`:
+
+```bash
+ocr review --provider claude-cli --model sonnet
+ocr review --provider codex-cli --model default
+```
+
 ### Встроенные провайдеры
 
 Перечисленные ниже провайдеры поставляются вместе с OCR; для них заранее

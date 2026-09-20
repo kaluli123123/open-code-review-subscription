@@ -35,6 +35,22 @@ ocr config set model                       claude-opus-4-6
 ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 ```
 
+For subscription CLI backends, switch the persistent provider and model with:
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # use the model selected by Codex CLI, e.g. gpt-5.6-luna
+ocr config set provider claude-cli
+ocr config set model opus          # or sonnet / haiku
+```
+
+For a one-command override, add `--provider` and `--model`, for example:
+
+```bash
+ocr review --provider claude-cli --model sonnet
+ocr review --provider codex-cli --model default
+```
+
 ### Built-in providers
 
 The following providers ship with OCR, with the Base URL and protocol

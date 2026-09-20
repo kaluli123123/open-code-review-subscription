@@ -34,6 +34,22 @@ ocr config set model                       claude-opus-4-6
 ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 ```
 
+对于订阅 CLI 后端，可以这样切换默认 provider 和 model：
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # 使用 Codex CLI 选择的模型，例如 gpt-5.6-luna
+ocr config set provider claude-cli
+ocr config set model opus          # 也可以使用 sonnet / haiku
+```
+
+只对单次命令覆盖配置时，添加 `--provider` 和 `--model`：
+
+```bash
+ocr review --provider claude-cli --model sonnet
+ocr review --provider codex-cli --model default
+```
+
 ### 内置 provider
 
 下列 provider 随 OCR 发布，已预置 Base URL 与协议，选中后只需填 API key。

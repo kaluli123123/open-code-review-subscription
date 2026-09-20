@@ -4,6 +4,16 @@
 
 **Соберите исходники этого форка командой `make build` и используйте `dist/opencodereview`.** Пакет npm и команды установки upstream ниже не устанавливают бэкенды этого форка. См. [настройку, границы проверки и ограничения](../cli-subscriptions.md). Квоты подписки и возможная плата за дополнительное использование в настройках аккаунта сохраняются. Это не бесплатные и не безлимитные запросы.
 
+Быстрое переключение модели:
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # модель, выбранная Codex CLI, например gpt-5.6-luna
+ocr config set provider claude-cli
+ocr config set model opus          # также доступны sonnet / haiku
+ocr review --provider claude-cli --model sonnet  # только для этой команды
+```
+
 Ниже приведено описание upstream-проекта. Значки, релизы и размещенные сервисы относятся к upstream, а не к этому форку.
 
 ---

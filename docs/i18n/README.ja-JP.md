@@ -4,6 +4,16 @@
 
 **このフォークのソースで `make build` を実行し、`dist/opencodereview` を使用してください。** 以下の上流 npm パッケージやインストール手順には、このフォーク独自のバックエンドは含まれません。[設定、検証範囲、制限](../cli-subscriptions.md)を確認してください。契約の利用上限や、アカウントで有効にした追加利用料金は適用されます。無料・無制限の推論ではありません。
 
+モデルをすばやく切り替えるには：
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # Codex CLI が選択したモデル（例：gpt-5.6-luna）を使用
+ocr config set provider claude-cli
+ocr config set model opus          # sonnet / haiku も使用可能
+ocr review --provider claude-cli --model sonnet  # このコマンドだけに適用
+```
+
 以下は上流プロジェクトの説明です。バッジ、リリース、ホスト型サービスは、このフォークではなく上流を指します。
 
 ---

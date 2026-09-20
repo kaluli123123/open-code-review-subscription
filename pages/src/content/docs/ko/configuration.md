@@ -34,6 +34,24 @@ ocr config set model                       claude-opus-4-6
 ocr config set providers.anthropic.api_key sk-ant-xxxxxxxxxx
 ```
 
+구독 CLI 백엔드의 기본 provider와 model을 전환하려면:
+
+```bash
+ocr config set provider codex-cli
+ocr config set model default       # Codex CLI가 선택한 모델(예: gpt-5.6-luna) 사용
+ocr config set provider claude-cli
+ocr config set model opus          # sonnet / haiku도 사용 가능
+```
+
+한 번의 명령에만 적용하려면 `--provider`와 `--model`을 추가합니다:
+
+```bash
+ocr review --provider claude-cli --model sonnet
+ocr review --provider codex-cli --model default
+```
+
+이 포크의 구독 CLI provider는 공식 CLI 로그인만 사용하며 API key나 API fallback을 사용하지 않습니다. Windows에서는 지원되지 않습니다.
+
 ### 내장 프로바이더 {#built-in-providers}
 
 다음 프로바이더는 Base URL과 프로토콜이 미리 설정된 채 OCR에 내장되어 있습니다. 선택한 뒤 API 키만 채우면 됩니다. `providers.<name>.api_key`가 비어 있으면 OCR은 해당 환경 변수로 대체합니다.
