@@ -1,6 +1,6 @@
 # 독립 포크: 구독 CLI 백엔드
 
-이 저장소는 [alibaba/open-code-review](https://github.com/alibaba/open-code-review)의 실험적 포크로, `claude-cli`와 `codex-cli` 백엔드를 추가합니다. OCR의 기본 리뷰 및 도구 루프를 유지하며 **delegation 모드가 아닙니다**. Alibaba, Anthropic, OpenAI의 공식 릴리스가 아니며 이들의 보증을 의미하지 않습니다. 업스트림 저작권 고지와 [Apache-2.0 라이선스](../../LICENSE)를 유지합니다.
+이 저장소는 [alibaba/open-code-review](https://github.com/alibaba/open-code-review)의 실험적 포크로, `claude-cli`와 `codex-cli` 구독 백엔드를 추가합니다. OCR의 기본 review, scan, 도구 실행 및 session pipeline을 유지하며 공식 CLI의 구독 로그인으로 실행합니다. API key가 필요 없고 **delegation 모드가 아니며**, API로 폴백하지 않습니다. Alibaba, Anthropic, OpenAI의 공식 릴리스가 아니며 이들의 보증을 의미하지 않습니다. 업스트림 저작권 고지와 [Apache-2.0 라이선스](../../LICENSE)를 유지합니다.
 
 **이 포크의 소스에서 `make build`를 실행하고 `dist/opencodereview`를 사용하세요.** 아래 업스트림 npm 패키지와 설치 명령에는 이 포크 전용 백엔드가 포함되지 않습니다. [설정, 검증 범위 및 제한](../cli-subscriptions.md)을 먼저 확인하세요. 구독 사용량 제한과 계정에서 활성화한 추가 사용 요금은 그대로 적용됩니다. 무료 또는 무제한 추론이 아닙니다.
 
