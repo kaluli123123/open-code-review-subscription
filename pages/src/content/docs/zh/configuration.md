@@ -70,6 +70,7 @@ ocr review --provider codex-cli --model default
 | `codex-cli` | codex-cli | —（本地官方 CLI） | —（订阅登录） |
 | `openai` | openai | `https://api.openai.com/v1` | `OPENAI_API_KEY` |
 | `openai-responses` | openai-responses | `https://api.openai.com/v1` | `OPENAI_RESPONSES_API_KEY` |
+| `openrouter` | openai | `https://openrouter.ai/api/v1` | `OPENROUTER_API_KEY` |
 | `gemini` | openai | `https://generativelanguage.googleapis.com/v1beta/openai` | `GEMINI_API_KEY` |
 | `dashscope` | openai | `https://dashscope.aliyuncs.com/compatible-mode/v1` | `DASHSCOPE_API_KEY` |
 | `dashscope-tokenplan` | openai | `https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1` | `DASHSCOPE_TOKENPLAN_KEY` |
@@ -89,6 +90,11 @@ ocr review --provider codex-cli --model default
 | `siliconflow-cn`  | openai | `https://api.siliconflow.cn/v1` | `SILICONFLOW_API_KEY` |
 | `novita` | openai | `https://api.novita.ai/openai` | `NOVITA_API_KEY` |
 | `xai` | openai | `https://api.x.ai/v1` | `XAI_API_KEY` |
+
+内置 provider 的模型列表只为 `ocr config model` 提供选择建议，不限制 `--model`。
+如果指定的模型既不在内置列表中，也不在 `providers.<name>.models` 中，OCR 会向
+stderr 输出警告；发送请求时由 provider 验证模型。自定义 provider 仍遵循原有的
+`--model` 校验规则。
 
 ### 覆盖内置 provider 的 Base URL
 

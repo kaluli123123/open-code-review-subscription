@@ -133,7 +133,50 @@ process-lifecycle hardening. Use only trusted official CLIs in local,
 single-user environments. Shared or production-grade isolation requires that
 hardening first.
 
-## Verification
+## Upstream synchronization (2026-10-08)
+
+This fork incorporates Alibaba's `main` at
+[`182898cf522da3d04157b422752d028417974e19`](https://github.com/alibaba/open-code-review/commit/182898cf522da3d04157b422752d028417974e19),
+42 upstream commits after the original `85cecfe` base. The three original
+subscription-backend commits are retained rather than replaced by upstream.
+
+The update includes OpenRouter, unlisted built-in API model overrides,
+two-turn `ocr llm test` tool verification, `ocr session rm`, F# and `.j2`
+support, quoted/non-ASCII path handling, safer configuration updates, and
+viewer and CI fixes. Upstream removed `OCR_CONFIG_PATH`; configuration uses
+the standard home-directory path. CLI subscription authentication, isolation,
+and rejection of API fallback remain unchanged.
+
+The frontend and IDEA provider catalogs are regenerated from the merged Go
+registry, including `claude-cli` and `codex-cli`. The frontend protocol type
+accepts both. The upstream all-provider model-override regression uses
+protocol-appropriate credentials; subscription providers must not receive API
+keys or AWS settings. A redundant test that pinned the entire provider list
+was removed; the existing sorted-order invariant remains covered.
+
+Verification of this synchronization:
+
+- Go packages passed race-enabled tests. The initial full run exposed the
+  API-only fixture assumption above; after correcting that fixture, the only
+  failing package (`internal/llm`) passed its complete race-enabled suite.
+- `go vet ./...`, generated-catalog consistency, license headers, English-only
+  source checks, and GitHub Actions SHA-pin checks passed.
+- Frontend type checking, all 54 tests, and the production build passed.
+- GitHub Actions, plugin-contract, Node launcher, and version-script tests passed.
+- The built CLI listed OpenRouter and both subscription providers. A temporary
+  repository preview selected Chinese-named Python and `.j2` files plus F#,
+  while excluding `node_modules`.
+- Codex CLI 0.161.0 completed the real `ocr llm test` connection and tool-call
+  round trip. Claude Code 2.1.289 passed subscription authentication preflight,
+  but live inference was unavailable in the verification environment; it is
+  not claimed revalidated by this synchronization.
+
+These checks do not constitute a live full-review/scan run, native IDE
+extension validation, viewer visual testing, or cross-platform verification.
+The command on the system PATH is not replaced by a source build; use
+`dist/opencodereview` to run this synchronized checkout.
+
+## Original subscription implementation verification
 
 The implementation was verified with `make test`, `make check`, and
 `make coverage`; total coverage was 92.3%. Fake CLI tests cover authentication,
